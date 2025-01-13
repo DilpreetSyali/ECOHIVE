@@ -1,0 +1,42 @@
+import javax.naming.Binding
+
+pluginManagement {
+    // Load the Flutter SDK path from the local.properties file
+    def flutterSdkPath = {
+        def properties = new Properties()
+        file("local.properties").withInputStream { properties.load(it) }
+        def flutterSdkPath = properties.getProperty("flutter.sdk")
+        assert flutterSdkPath != null, "flutter.sdk not set in local.properties"
+        return flutterSdkPath
+    }()
+
+    // Include Flutter tools from the SDK
+    includeBuild("$flutterSdkPath/packages/flutter_tools/gradle")
+
+    // Define repositories for plugins
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+plugins {
+    // Apply the Flutter plugin loader for Flutter plugin support
+    id "dev.flutter.flutter-plugin-loader" version "1.0.0"
+
+    // Apply the Android application plugin (not immediately, hence `apply false`)
+    id "com.android.application" version "8.1.0" apply false
+
+    // Apply the Kotlin plugin (not immediately, hence `apply false`)
+    id "org.jetbrains.kotlin.android" version "1.8.22" apply false
+}
+
+// Include the app module (ensure the app module exists in the project)
+include ":app"
+
+// Bind the gradle context
+setBinding(new Binding([gradle: this]))
+
+// Evaluate additional Flutter settings (ensure flutter_settings.gradle exists)
+evaluate(new File(settingsDir, '../flutter_settings.gradle'))

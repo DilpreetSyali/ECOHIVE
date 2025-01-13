@@ -1,0 +1,68 @@
+android {
+    // Ensure to escape backslashes in SDK path
+    sdkDirectory = "C:\\Users\\Dell\\AppData\\Local\\Android\\Sdk" // Correct path with escaped backslashes
+
+    namespace = "com.ecohive.app"
+    compileSdkVersion = 34 // Use the latest stable compile SDK version
+    ndkVersion = "25.2.9519653" // Replace with your desired NDK version if needed
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
+    defaultConfig {
+        applicationId = "com.ecohive.app"
+        minSdkVersion 19 // Ensure compatibility with Flutter and Firebase
+        targetSdkVersion 34 // Match the latest stable version
+        versionCode = 1
+        versionName = "1.0"
+    }
+
+    buildTypes {
+        release {
+            // Avoid using debug signing config for release
+            minifyEnabled false
+            shrinkResources false
+            signingConfig signingConfigs.debug
+        }
+    }
+}
+
+flutter {
+    source = "../.."
+}
+
+apply plugin: 'com.google.gms.google-services' // Firebase plugin
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.1.1'
+        classpath 'com.google.gms:google-services:4.4.0'
+    }
+}
+
+dependencies {
+    // Firebase dependencies
+    implementation 'com.google.firebase:firebase-analytics:21.0.0'
+    implementation 'com.google.firebase:firebase-auth:21.0.0'
+    implementation 'com.google.firebase:firebase-firestore:24.0.0'
+    implementation 'com.google.firebase:firebase-database:20.0.0'
+    implementation 'io.flutter:flutter_embedding_release:<latest_version>'
+    // AndroidX dependencies
+    implementation "androidx.core:core-ktx:1.9.0"
+    implementation "androidx.core:core-splashscreen:1.0.0"
+    implementation "androidx.activity:activity:1.8.0"
+    // Flutter embedding v2
+    implementation 'io.flutter:flutter_embedding:2.0.0'
+    implementation 'io.flutter:flutter_embedding:1.0.0'
+}

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "560224667723",
+    "project_id": "ecohive-9c75f",
+    "storage_bucket": "ecohive-9c75f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:560224667723:android:d12a1b02aa6fcc964b25ce",
+        "android_client_info": {
+          "package_name": "com.ecohive.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCUKMj1Et_PB8MuqaAecKAIM1UKKACyjA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
