@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECOHIVE Dashboard</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #e8f5e9; /* Light green background as per your note */
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            color: #333;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            background-color: #4caf50;
+            color: white;
+            width: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: start;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .sidebar h2 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            border-bottom: 1px solid white;
+            padding-bottom: 10px;
+        }
+
+        .sidebar a {
+            color: white;
+            font-size: 1.1em;
+            text-decoration: none;
+            margin: 10px 0;
+            display: block;
+        }
+
+        .sidebar a:hover {
+            background-color: #388e3c;
+            padding: 5px;
+            border-radius: 5px;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+            background-color: #f0f5f9;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            max-width: 500px;
+            margin-bottom: 20px; /* Reduced space between logo and ECOHIVE title */
+        }
+
+        h1 {
+            font-size: 5.5em;
+            color: #2f855a;
+            margin: 0;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 10px; /* Reduced space between footer and ECOHIVE title */
+            font-size: 0.9em;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Menu</h2>
+        <a href="about.html">About</a>
+        <a href="location.html">Locations</a>
+        <a href="setpass.html">Settings</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Logo -->
+        <img src="ecohive-high-resolution-logo.png" alt="ECOHIVE Logo" class="logo">
+        
+        <h1>ECOHIVE</h1>
+        
+        <!-- Content for each page -->
+        <div id="content">
+            <!-- Dynamically insert page content here, depending on which link is clicked -->
+            <p>Welcome to ECOHIVE Dashboard. Select a menu item to get started.</p>
+        </div>
+
+        <div class="footer">
+            <p>Developed by ECOHIVE | Smart Dustbin Management System</p>
+        </div>
+    </div>
+
+</body>
+</html>

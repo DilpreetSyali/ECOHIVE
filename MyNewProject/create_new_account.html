@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Account - ECOHIVE</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #e8f5e9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #333;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 1.8em;
+            color: #2f855a;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        label {
+            font-size: 0.9em;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        .create-button {
+            width: 100%;
+            background-color: #4caf50;
+            color: #ffffff;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .create-button:hover {
+            background-color: #388e3c;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+    </style>
+    <script>
+        function validateForm(event) {
+            event.preventDefault();  // Prevent form submission temporarily for validation
+            const uniqueID = document.getElementById("uniqueID").value;
+            const errorMessage = document.getElementById("error-message");
+    
+            // Check if the Unique ID is empty
+            if (!uniqueID) {
+                errorMessage.textContent = "Error: Unique ID cannot be empty.";
+                return;
+            }
+    
+            // Check if the unique ID is within the allowed range
+            if (uniqueID === "1001" || uniqueID === "1002" || uniqueID === "1003") {
+                errorMessage.textContent = ""; // Clear any previous error message
+                document.getElementById("create-account-form").submit(); // Submit form
+            } else {
+                errorMessage.textContent = "Error: You are not part of the organization.";
+            }
+        }
+    </script>
+    
+</head>
+<body>
+
+    <div class="container">
+        <h1>Create New Account</h1>
+        
+        <form id="create-account-form" action="dashboard.html" method="post" onsubmit="validateForm(event)">
+            <div class="form-group">
+                <label for="uniqueID">Unique ID</label>
+                <input type="text" id="uniqueID" name="uniqueID" required placeholder="Enter your organization ID">
+            </div>
+            
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+
+            <button type="submit" class="create-button">Create Account</button>
+
+            <div id="error-message" class="error-message"></div>
+        </form>
+    </div>
+
+</body>
+</html>

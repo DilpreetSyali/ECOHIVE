@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Locations - ECOHIVE</title>
+    <style>
+        
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            background-color: #f0f5e9;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #2f855a;
+            padding: 20px;
+            color: white;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar h2 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .sidebar ul li:hover, .sidebar ul li.active {
+            background-color: #4caf50;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .map {
+            width: 80%;
+            height: 400px;
+            border: 2px solid #4caf50;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            font-size: 1.2em;
+            background-color: #e8f5e9;
+            margin-bottom: 20px;
+        }
+
+        .dustbin-status {
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .meters {
+            display: flex;
+            justify-content: space-around;
+            gap: 20px;
+        }
+
+        .meter {
+            width: 150px;
+            background-color: #e8f5e9;
+            border: 2px solid #4caf50;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .meter-icon {
+            font-size: 2.5em;
+            color: #4caf50;
+            margin-bottom: 10px;
+        }
+
+        .meter-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2f855a;
+        }
+
+        .meter-label {
+            margin-top: 5px;
+            font-size: 1em;
+            color: #333;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            background-color: #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+            height: 10px;
+            margin-top: 10px;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background-color: #4caf50;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+    </style>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+    <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2>Locations</h2>
+        <ul>
+            <li onclick="showMap('GRAPHIC ERA UNIVERSITY')">GRAPHIC ERA UNIVERSITY</li>
+            <li onclick="showMap('GRAPHIC ERA HILL UNIVERSITY')">GRAPHIC ERA HILL UNIVERSITY</li>
+            <li onclick="showMap('TIBETAN COLONY')">TIBETAN COLONY</li>
+            <li onclick="showMap('SHUBHASH NAGAR')">SHUBHASH NAGAR</li>
+        </ul>
+        <nav>
+            <ul>
+                <li><a href="PART2.HTML">Main Dashboard</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="setpass.html">Settings</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="content">
+        <div id="map" class="map">
+            Select a location to view the map.
+        </div>
+
+        <div class="dustbin-status">
+            <h3>Dustbin Status for <span id="locationName">Selected Location</span></h3>
+            <div class="meters">
+                <!-- Distance Meter -->
+                <div class="meter">
+                    <div class="meter-icon">📏</div>
+                    <div class="meter-value" id="distanceValue">0 cm</div>
+                    <div class="meter-label">Distance</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" id="distanceBar" style="width: 0%;"></div>
+                    </div>
+                </div>
+                
+                <!-- Fill Level Meter -->
+                <div class="meter">
+                    <div class="meter-icon">🗑️</div>
+                    <div class="meter-value" id="fillLevelValue">0%</div>
+                    <div class="meter-label">Fill Level</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" id="fillLevelBar" style="width: 0%;"></div>
+                    </div>
+                </div>
+                
+                <!-- Battery Level Meter -->
+                <div class="meter">
+                    <div class="meter-icon">🔋</div>
+                    <div class="meter-value" id="batteryValue">0%</div>
+                    <div class="meter-label">Battery Level</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" id="batteryBar" style="width: 0%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let map, routeControl;
+        let currentMarker; 
+        
+        // Coordinates for locations
+        const coordinates = {
+            "GRAPHIC ERA UNIVERSITY": [30.324, 78.033],   // Dehradun, Uttarakhand
+            "GRAPHIC ERA HILL UNIVERSITY": [30.343, 78.065],
+            "TIBETAN COLONY": [30.320, 78.021],
+            "SHUBHASH NAGAR": [30.350, 78.080]
+        };
+    
+        function showMap(location) {
+            const mapDiv = document.getElementById("map");
+            const locationName = document.getElementById("locationName");
+            locationName.textContent = location;
+    
+            // Initialize the map if it is not already initialized
+            if (!map) {
+                map = L.map('map').setView(coordinates[location], 13);
+    
+                // Add OpenStreetMap tile layer
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }).addTo(map);
+            } else {
+                map.setView(coordinates[location], 13); // Move the map to the new location
+            }
+    
+            // Remove the existing marker if any
+            if (currentMarker) {
+                map.removeLayer(currentMarker);
+            }
+    
+            // Add a new marker on the map for the selected location
+            currentMarker = L.marker(coordinates[location]).addTo(map)
+                .bindPopup(`<b>${location}</b><br>Location details.`)
+                .openPopup();
+    
+            // If a route control exists, remove it
+            if (routeControl) {
+                map.removeControl(routeControl);
+            }
+    
+            // Clear any existing click event listeners to avoid duplication
+            map.off('click');
+    
+            // Allow users to select the second location for the route
+            let start = coordinates[location];
+    
+            // Add routing control and wait for the second click to determine end point
+            routeControl = L.Routing.control({
+                waypoints: [L.latLng(start)],
+                createMarker: function() { return null; }, // Don't create marker at waypoints
+                routeWhileDragging: true
+            }).addTo(map);
+    
+            map.on('click', function(e) {
+                // Add the second location for routing when the map is clicked
+                routeControl.setWaypoints([L.latLng(start), e.latlng]);
+            });
+        }
+    
+        // Simulate updating dustbin data for the selected location
+        function updateDistance(value) {
+            document.getElementById('distanceValue').textContent = value + " cm";
+            document.getElementById('distanceBar').style.width = value + "%";
+        }
+    
+        function updateFillLevel(value) {
+            document.getElementById('fillLevelValue').textContent = value + "%";
+            document.getElementById('fillLevelBar').style.width = value + "%";
+        }
+    
+        function updateBatteryLevel(value) {
+            document.getElementById('batteryValue').textContent = value + "%";
+            document.getElementById('batteryBar').style.width = value + "%";
+        }
+    </script>    
+</body>
+</html>
